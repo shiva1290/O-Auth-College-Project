@@ -1,4 +1,5 @@
 import { useAuth } from '../context/AuthContext'
+import Avatar from '../components/Avatar'
 
 const Dashboard = () => {
   const { user } = useAuth()
@@ -25,13 +26,7 @@ const Dashboard = () => {
 
           <div className="profile-section">
             <div className="profile-avatar-large">
-              {user?.avatar ? (
-                <img src={user.avatar} alt={user.name} />
-              ) : (
-                <div className="avatar-placeholder">
-                  {user?.name?.charAt(0).toUpperCase()}
-                </div>
-              )}
+              <Avatar user={user} size="xlarge" />
             </div>
 
             <div className="profile-info">

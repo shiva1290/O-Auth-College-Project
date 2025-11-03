@@ -3,6 +3,8 @@ import { AuthProvider } from './context/AuthContext'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import Dashboard from './pages/Dashboard'
+import SettingsPage from './pages/SettingsPage'
+import AdminPage from './pages/AdminPage'
 import ProtectedRoute from './components/ProtectedRoute'
 import Navbar from './components/Navbar'
 import './App.css'
@@ -23,6 +25,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/settings" 
+                element={
+                  <ProtectedRoute>
+                    <SettingsPage />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/admin" 
+                element={
+                  <ProtectedRoute>
+                    <AdminPage />
                   </ProtectedRoute>
                 } 
               />

@@ -9,6 +9,13 @@ const generateState = () => {
 };
 
 /**
+ * Generate nonce for replay protection
+ */
+const generateNonce = () => {
+  return crypto.randomBytes(32).toString('hex');
+};
+
+/**
  * Generate code verifier for PKCE
  */
 const generateCodeVerifier = () => {
@@ -28,25 +35,39 @@ const generateCodeChallenge = (verifier) => {
 /**
  * Google OAuth2 configuration
  */
-const getGoogleAuthUrl = (state, codeChallenge) => {
+const getGoogleAuthUrl = (state, codeChallenge, nonce, scopes = null) => {
   const rootUrl = 'https://accounts.google.com/o/oauth2/v2/auth';
+  
+  // Default scopes based on environment or use custom scopes
+  const defaultScopes = process.env.GOOGLE_SCOPES ? 
+    process.env.GOOGLE_SCOPES.split(',') : 
+    [
+      'https://www.googleapis.com/auth/userinfo.profile',
+      'https://www.googleapis.com/auth/userinfo.email',
+    ];
+  
   const options = {
-    redirect_uri: process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/auth/google/callback',
+    redirect_uri: getGoogleRedirectUri(),
     client_id: process.env.GOOGLE_CLIENT_ID,
     access_type: 'offline',
     response_type: 'code',
     prompt: 'consent',
-    scope: [
-      'https://www.googleapis.com/auth/userinfo.profile',
-      'https://www.googleapis.com/auth/userinfo.email',
-    ].join(' '),
+    scope: (scopes || defaultScopes).join(' '),
     state: state,
+    nonce: nonce,
     code_challenge: codeChallenge,
     code_challenge_method: 'S256'
   };
 
   const qs = new URLSearchParams(options);
   return `${rootUrl}?${qs.toString()}`;
+};
+
+/**
+ * Get Google redirect URI based on environment
+ */
+const getGoogleRedirectUri = () => {
+  return process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/auth/google/callback';
 };
 
 /**
@@ -91,20 +112,34 @@ const getGoogleUser = async (accessToken) => {
 /**
  * Facebook OAuth2 configuration
  */
-const getFacebookAuthUrl = (state, codeChallenge) => {
+const getFacebookAuthUrl = (state, codeChallenge, nonce, scopes = null) => {
   const rootUrl = 'https://www.facebook.com/v18.0/dialog/oauth';
+  
+  // Default scopes based on environment or use custom scopes
+  const defaultScopes = process.env.FACEBOOK_SCOPES ? 
+    process.env.FACEBOOK_SCOPES.split(',') : 
+    ['email', 'public_profile'];
+  
   const options = {
     client_id: process.env.FACEBOOK_CLIENT_ID,
-    redirect_uri: process.env.FACEBOOK_REDIRECT_URI || 'http://localhost:5000/auth/facebook/callback',
+    redirect_uri: getFacebookRedirectUri(),
     state: state,
     response_type: 'code',
-    scope: ['email', 'public_profile'].join(','),
+    scope: (scopes || defaultScopes).join(','),
+    nonce: nonce,
     code_challenge: codeChallenge,
     code_challenge_method: 'S256'
   };
 
   const qs = new URLSearchParams(options);
   return `${rootUrl}?${qs.toString()}`;
+};
+
+/**
+ * Get Facebook redirect URI based on environment
+ */
+const getFacebookRedirectUri = () => {
+  return process.env.FACEBOOK_REDIRECT_URI || 'http://localhost:5000/auth/facebook/callback';
 };
 
 /**
@@ -140,13 +175,16 @@ const getFacebookUser = async (accessToken) => {
 
 module.exports = {
   generateState,
+  generateNonce,
   generateCodeVerifier,
   generateCodeChallenge,
   getGoogleAuthUrl,
   getGoogleTokens,
   getGoogleUser,
+  getGoogleRedirectUri,
   getFacebookAuthUrl,
   getFacebookTokens,
-  getFacebookUser
+  getFacebookUser,
+  getFacebookRedirectUri
 };
 

@@ -11,9 +11,9 @@ const REFRESH_TOKEN_EXPIRY = '7d';
 /**
  * Generate access token
  */
-const generateAccessToken = (userId) => {
+const generateAccessToken = (userId, role = 'user') => {
   return jwt.sign(
-    { userId, type: 'access' },
+    { userId, role, type: 'access' },
     JWT_SECRET,
     { expiresIn: ACCESS_TOKEN_EXPIRY }
   );
