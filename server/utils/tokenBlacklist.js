@@ -9,8 +9,10 @@ class TokenBlacklist {
     this.blacklist = new Map();
     this.cleanupInterval = 60 * 60 * 1000; // 1 hour
     
-    // Start periodic cleanup
-    this.startCleanup();
+    // Start periodic cleanup only if not in serverless
+    if (!process.env.VERCEL) {
+      this.startCleanup();
+    }
   }
 
   /**

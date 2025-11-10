@@ -30,15 +30,27 @@ const {
 // In-memory store for OAuth state (use Redis in production)
 const oauthStates = new Map();
 
-// Clean up old OAuth states periodically
-setInterval(() => {
+// Clean up old OAuth states periodically (only in non-serverless)
+if (!process.env.VERCEL) {
+  setInterval(() => {
+    const now = Date.now();
+    for (const [key, value] of oauthStates.entries()) {
+      if (now - value.timestamp > 10 * 60 * 1000) { // 10 minutes
+        oauthStates.delete(key);
+      }
+    }
+  }, 60 * 1000); // Run every minute
+}
+
+// Manual cleanup function for serverless
+const cleanupOldStates = () => {
   const now = Date.now();
   for (const [key, value] of oauthStates.entries()) {
-    if (now - value.timestamp > 10 * 60 * 1000) { // 10 minutes
+    if (now - value.timestamp > 10 * 60 * 1000) {
       oauthStates.delete(key);
     }
   }
-}, 60 * 1000); // Run every minute
+};
 
 /**
  * Manual signup with email/password

@@ -7,12 +7,27 @@ const crypto = require('crypto');
 const avatarCache = new Map();
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
+// Cleanup function for cache
+const cleanupCache = () => {
+  const now = Date.now();
+  for (const [key, value] of avatarCache.entries()) {
+    if (now - value.timestamp > CACHE_DURATION) {
+      avatarCache.delete(key);
+    }
+  }
+};
+
 /**
  * Proxy endpoint for avatar images
  * This bypasses CORS and rate limiting issues by caching images server-side
  */
 router.get('/proxy', async (req, res) => {
   try {
+    // Cleanup old cache entries in serverless
+    if (process.env.VERCEL) {
+      cleanupCache();
+    }
+    
     const { url } = req.query;
 
     if (!url) {

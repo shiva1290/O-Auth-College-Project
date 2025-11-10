@@ -10,8 +10,10 @@ class RateLimiter {
     this.requests = new Map();
     this.cleanupInterval = 60 * 1000; // 1 minute
     
-    // Start periodic cleanup
-    this.startCleanup();
+    // Start periodic cleanup only if not in serverless
+    if (!process.env.VERCEL) {
+      this.startCleanup();
+    }
   }
 
   /**
