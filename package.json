@@ -14,7 +14,6 @@
     "seed": "cd server && npm run seed",
     "seed:clear": "cd server && npm run seed:clear",
     "build": "cd client && npm run build",
-    "vercel-build": "npm run build:client",
     "start": "node server/index.js",
     "generate-secrets": "node generate-secrets.js"
   },
