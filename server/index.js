@@ -51,9 +51,12 @@ const connectDB = async () => {
   }
 };
 
-// Connect immediately if not in serverless
+// Initialize connection (but don't await in module scope)
 if (!process.env.VERCEL) {
   connectDB();
+} else {
+  // In serverless, connect on first request
+  console.log('🔄 Serverless mode: MongoDB will connect on first request');
 }
 
 // Routes
