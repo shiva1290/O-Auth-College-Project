@@ -258,6 +258,11 @@ router.post('/login', authRateLimit, validateLogin, async (req, res) => {
  */
 router.get('/google', oauthRateLimit, (req, res) => {
   try {
+    // Cleanup old states in serverless
+    if (process.env.VERCEL) {
+      cleanupOldStates();
+    }
+    
     const state = generateState();
     const nonce = generateNonce();
     const codeVerifier = generateCodeVerifier();
@@ -493,6 +498,11 @@ router.get('/google/callback', async (req, res) => {
  */
 router.get('/facebook', oauthRateLimit, (req, res) => {
   try {
+    // Cleanup old states in serverless
+    if (process.env.VERCEL) {
+      cleanupOldStates();
+    }
+    
     const state = generateState();
     const nonce = generateNonce();
     const codeVerifier = generateCodeVerifier();
