@@ -26,13 +26,35 @@ app.use(cookieParser());
 // CORS configuration
 app.use(cors(config.cors));
 
-// MongoDB connection
-mongoose.connect(config.database.uri, config.database.options)
-.then(() => {
-  console.log('✅ MongoDB connected successfully');
-  console.log(`📊 Database: ${config.database.uri.split('@')[1] || config.database.uri.split('//')[1]}`);
-})
-.catch((err) => console.error('❌ MongoDB connection error:', err));
+// MongoDB connection with connection pooling for serverless
+let cachedDb = null;
+
+const connectDB = async () => {
+  if (cachedDb) {
+    return cachedDb;
+  }
+
+  try {
+    const conn = await mongoose.connect(config.database.uri, {
+      ...config.database.options,
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000,
+    });
+    
+    cachedDb = conn;
+    console.log('✅ MongoDB connected successfully');
+    console.log(`📊 Database: ${config.database.uri.split('@')[1] || config.database.uri.split('//')[1]}`);
+    return conn;
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err);
+    throw err;
+  }
+};
+
+// Connect immediately if not in serverless
+if (!process.env.VERCEL) {
+  connectDB();
+}
 
 // Routes
 app.use('/auth', authRoutes);
