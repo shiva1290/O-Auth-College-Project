@@ -101,6 +101,7 @@ app.use((err, req, res, next) => {
 
 // Export app for Vercel serverless
 module.exports = app;
+module.exports.connectDB = connectDB;
 
 // Start server only if not in serverless environment
 if (!process.env.VERCEL) {
