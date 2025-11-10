@@ -13,8 +13,9 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "seed": "cd server && npm run seed",
     "seed:clear": "cd server && npm run seed:clear",
-    "build": "cd client && npm install && npm run build",
-    "vercel-build": "cd client && npm install && npm run build",
+    "build": "npm run build:client",
+    "build:client": "cd client && npm install && npm run build && cd .. && cp -r client/dist dist",
+    "vercel-build": "npm run build:client",
     "start": "node server/index.js",
     "generate-secrets": "node generate-secrets.js"
   },
