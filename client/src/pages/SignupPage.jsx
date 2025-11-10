@@ -47,7 +47,8 @@ const SignupPage = () => {
   }
 
   const handleSocialLogin = (provider) => {
-    window.location.href = `http://localhost:5000/auth/${provider}`
+    const baseURL = import.meta.env.MODE === 'production' ? '' : 'http://localhost:5000'
+    window.location.href = `${baseURL}/auth/${provider}`
   }
 
   return (
@@ -61,7 +62,7 @@ const SignupPage = () => {
 
           {error && (
             <div className="alert alert-error">
-              {error}
+              {typeof error === 'string' ? error : error?.message || 'An error occurred'}
             </div>
           )}
 

@@ -66,7 +66,7 @@ const LoginPage = () => {
 
           {error && (
             <div className="alert alert-error">
-              {error}
+              {typeof error === 'string' ? error : error?.message || 'An error occurred'}
             </div>
           )}
 
