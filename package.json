@@ -15,7 +15,8 @@
     "seed:clear": "cd server && npm run seed:clear",
     "build": "cd client && npm install && npm run build",
     "vercel-build": "cd client && npm install && npm run build",
-    "start": "node server/index.js"
+    "start": "node server/index.js",
+    "generate-secrets": "node generate-secrets.js"
   },
   "keywords": [
     "oauth2",

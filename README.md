@@ -452,6 +452,19 @@ User:
 - [ ] Logout invalidates tokens
 - [ ] Refresh token renews access
 
+## 🚀 Deployment to Vercel
+
+### Quick Deploy (10 minutes)
+See **[QUICK_DEPLOY.md](./QUICK_DEPLOY.md)** for fast deployment guide.
+
+### Complete Deployment Guide
+See **[DEPLOYMENT.md](./DEPLOYMENT.md)** for detailed step-by-step deployment including:
+- MongoDB Atlas setup
+- OAuth credentials configuration  
+- Backend & Frontend deployment
+- Environment variables configuration
+- Testing & troubleshooting
+
 ## 🚢 Production Deployment
 
 ### Pre-Deployment Checklist
