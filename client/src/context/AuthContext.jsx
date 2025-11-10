@@ -17,9 +17,12 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null)
 
   // Configure axios defaults
-  // In production (Vercel), use same domain. In dev, use localhost
-  axios.defaults.baseURL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000')
+  // In production (Vercel), use same domain (empty string for relative URLs). In dev, use localhost
+  const baseURL = import.meta.env.MODE === 'production' ? '' : 'http://localhost:5000'
+  axios.defaults.baseURL = baseURL
   axios.defaults.withCredentials = true
+  
+  console.log('🔧 API Base URL:', baseURL, '| Mode:', import.meta.env.MODE)
 
   // Check if user is logged in on mount
   useEffect(() => {
