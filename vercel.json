@@ -3,7 +3,7 @@
   "outputDirectory": "client/dist",
   "installCommand": "npm install && cd server && npm install",
   "functions": {
-    "server/index.js": {
+    "api/**/*.js": {
       "memory": 1024,
       "maxDuration": 10
     }
@@ -11,15 +11,15 @@
   "rewrites": [
     {
       "source": "/auth/(.*)",
-      "destination": "/server/index.js"
+      "destination": "/api"
     },
     {
       "source": "/api/(.*)",
-      "destination": "/server/index.js"
+      "destination": "/api"
     },
     {
       "source": "/health",
-      "destination": "/server/index.js"
+      "destination": "/api"
     },
     {
       "source": "/(.*)",

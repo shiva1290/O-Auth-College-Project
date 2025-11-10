@@ -74,28 +74,33 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = config.server.port;
+// Export app for Vercel serverless
+module.exports = app;
 
-app.listen(PORT, () => {
-  console.log('\n' + '='.repeat(60));
-  console.log('🚀 OAuth Authentication Server');
-  console.log('='.repeat(60));
-  console.log(`📍 Server URL: http://localhost:${PORT}`);
-  console.log(`🌍 Environment: ${config.environment}`);
-  console.log(`👤 Client URL: ${config.client.url}`);
-  console.log(`🔐 Google OAuth: ${config.google.enabled ? '✅ Enabled' : '❌ Disabled'}`);
-  console.log(`🔐 Facebook OAuth: ${config.facebook.enabled ? '✅ Enabled' : '❌ Disabled'}`);
-  console.log(`🛡️  CSRF Protection: ${config.security.csrfEnabled ? '✅ Enabled' : '❌ Disabled'}`);
-  console.log(`📝 Audit Logging: ${config.features.auditLog ? '✅ Enabled' : '❌ Disabled'}`);
-  console.log('='.repeat(60) + '\n');
+// Start server only if not in serverless environment
+if (!process.env.VERCEL) {
+  const PORT = config.server.port;
+  app.listen(PORT, () => {
+    console.log('\n' + '='.repeat(60));
+    console.log('🚀 OAuth Authentication Server');
+    console.log('='.repeat(60));
+    console.log(`📍 Server URL: http://localhost:${PORT}`);
+    console.log(`🌍 Environment: ${config.environment}`);
+    console.log(`👤 Client URL: ${config.client.url}`);
+    console.log(`🔐 Google OAuth: ${config.google.enabled ? '✅ Enabled' : '❌ Disabled'}`);
+    console.log(`🔐 Facebook OAuth: ${config.facebook.enabled ? '✅ Enabled' : '❌ Disabled'}`);
+    console.log(`🛡️  CSRF Protection: ${config.security.csrfEnabled ? '✅ Enabled' : '❌ Disabled'}`);
+    console.log(`📝 Audit Logging: ${config.features.auditLog ? '✅ Enabled' : '❌ Disabled'}`);
+    console.log('='.repeat(60) + '\n');
 
-  // Print configuration in development
-  if (config.isDevelopment) {
-    console.log('💡 Development mode features:');
-    console.log('   - Mock OAuth available');
-    console.log('   - Configuration endpoint: /config');
-    console.log('   - Detailed error messages');
-    console.log('');
-  }
-});
+    // Print configuration in development
+    if (config.isDevelopment) {
+      console.log('💡 Development mode features:');
+      console.log('   - Mock OAuth available');
+      console.log('   - Configuration endpoint: /config');
+      console.log('   - Detailed error messages');
+      console.log('');
+    }
+  });
+}
 
